@@ -1,6 +1,8 @@
 from collections import defaultdict, namedtuple
+from datetime import datetime
 
 Message = namedtuple("Message", ["date", "user", "text"])
+WADateFormat = '%m/%d/%y, %I:%M:%S %p'
 
 
 class WAChat(object):
@@ -12,7 +14,7 @@ class WAChat(object):
             for line in infile:
                 splitLine = line.strip().split(": ")
                 if len(splitLine) >= 3:
-                    date = splitLine[0]
+                    date = datetime.strptime(splitLine[0], WADateFormat)
                     user = splitLine[1]
                     text = "".join(splitLine[2:])
                     self.messageList.append(Message(date, user, text))

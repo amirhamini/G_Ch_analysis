@@ -3,8 +3,7 @@ from wachat import WAChat
 
 def main():
     myChat = WAChat("whatsapp.txt")
-    for key, value in myChat.members.iteritems():
-        print key + ": " + str(value)
+    print myChat.messageList[0].text
 
 
 if __name__ == "__main__":
