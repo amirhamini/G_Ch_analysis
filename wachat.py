@@ -28,7 +28,6 @@ class WAChat(object):
                     continue
                 splitLine = line.strip().split(": ")
                 if len(splitLine) >= 3:
-                    print splitLine
                     date = datetime.strptime(splitLine[0], WADateFormat)
                     user = splitLine[1]
                     text = "".join(splitLine[2:])
