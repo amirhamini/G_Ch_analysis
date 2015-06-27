@@ -2,9 +2,8 @@ from wachat import WAChat
 
 
 def main():
-    myChat = WAChat("whatsapp.txt")
-    print myChat.messageList[0].text
-
+    myChat = WAChat("whatsapp3.txt")
+    print myChat.messageList
 
 if __name__ == "__main__":
     main()
