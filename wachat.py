@@ -30,6 +30,8 @@ class WAChat(object):
                 if len(splitLine) >= 3:
                     date = datetime.strptime(splitLine[0], WADateFormat)
                     user = splitLine[1]
+                    if user == "ERROR":
+                        continue
                     text = "".join(splitLine[2:])
                     self.messageList.append(Message(date, user, text))
 
