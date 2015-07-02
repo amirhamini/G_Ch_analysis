@@ -52,7 +52,7 @@ class WAChat(object):
 
     def plotMembersSpokenLines(self, dataRepresntIn = "total"):
         peopleList = self.getMembers().keys()
-        linesList = [self.getMembers()[key] for key in self.getMembers()]
+        linesList = self.getMembers().values()
         sumlinesList = sum(linesList)
         if dataRepresntIn == "p":
             linesList = [float(i)/sumlinesList for i in linesList]
@@ -63,7 +63,8 @@ class WAChat(object):
         ax.set_ylabel('Number of messages')
         ax.set_title('Number of messages sent by each member')
         if dataRepresntIn == "p":
-            ax.set_title("Number of messages sent by each member divided by total number of messages")
+            ax.set_title(("Number of messages sent by each member"
+                          " divided by total number of messages"))
         ax.set_xticks(ind+width)
         ax.set_xticklabels(peopleList, rotation="vertical")
         axes = plt.gca()
