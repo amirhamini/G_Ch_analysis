@@ -31,10 +31,15 @@ class WAChat(object):
                 splitLine = line.strip().split(": ")
                 if len(splitLine) >= 3:
                     date = datetime.strptime(splitLine[0], WADateFormat)
-                    user = splitLine[1]
+                    user = (unicodedata
+                            .normalize('NFKD', unicode(splitLine[1], "utf-8"))
+                            .encode("ascii", "ignore"))
                     if user == "ERROR":
                         continue
-                    text = "".join(splitLine[2:])
+                    text = (unicodedata
+                            .normalize('NFKD', unicode("".join(splitLine[2:]),
+                                       "utf-8"))
+                            .encode("ascii", "ignore"))
                     self.messageList.append(Message(date, user, text))
 
     def getMembers(self, fromHour=0, untilHour=23, fromDay=1, untilDay=31,
@@ -44,10 +49,7 @@ class WAChat(object):
             if (isMessageInFrame(message, fromHour, untilHour, fromDay,
                                  untilDay, fromMonth, untilMonth, fromYear,
                                  untilYear)):
-                name = (unicodedata
-                        .normalize('NFKD', unicode(message.user, "utf-8"))
-                        .encode("ascii", "ignore"))
-                members[name] += 1
+                members[message.user] += 1
         return dict(members)
 
     def plotMembersSpokenLines(self, dataRepresntIn = "total"):
@@ -86,6 +88,33 @@ class WAChat(object):
         plt.subplots_adjust(bottom=0.25)
         plt.show()
 
+    def getMemberFrequencies(self, keyword=None):
+        # starting from first day messages was sent until the last day,
+        # for each member, a dictionary of arrays (each sized number of days)
+        # gets created. if keyword is specified, when it is seen in a message
+        # by a member, 1 is added to the member of the array that represents
+        # that day, if keyword is not specified, it simply counts the number
+        # of messages sent by user on the timeline from start until end of the
+        # chat
 
+        firstMessageDate = self.messageList[0].date
+        lastMessageDate = self.messageList[-1].date
+        numberOfDays = (lastMessageDate - firstMessageDate).days + 1
+        membersByWord = dict()
 
+        for key in self.getMembers():
+            membersByWord[key] = [0]*numberOfDays
 
+        if keyword:
+            keyword = keyword.lower()
+
+        for message in self.messageList:
+            saidWord = 0
+            if keyword:
+                saidWord = message.text.lower().count(keyword)
+
+            if saidWord or not keyword:
+                messageDay = (message.date - firstMessageDate).days
+                membersByWord[message.user][messageDay] += 1
+
+        return membersByWord
