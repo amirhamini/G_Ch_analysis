@@ -52,9 +52,19 @@ class WAChat(object):
                 members[message.user] += 1
         return dict(members)
 
-    def plotMembersSpokenLines(self, dataRepresntIn = "total"):
-        peopleList = self.getMembers().keys()
-        linesList = self.getMembers().values()
+    def plotMembersSpokenLines(self, fromHour=0, untilHour=23, fromDay=1,
+                               untilDay=31, fromMonth=1, untilMonth=12,
+                               fromYear=2009, untilYear=2020,
+                               dataRepresntIn="total",
+                               yAxisTitle='Number of messages',
+                               plotTitle='Number of messages sent by each \
+                               member'):
+        peopleList = self.getMembers(fromHour, untilHour, fromDay, untilDay,
+                                     fromMonth, untilMonth, fromYear,
+                                     untilYear).keys()
+        linesList = self.getMembers(fromHour, untilHour, fromDay, untilDay,
+                                    fromMonth, untilMonth, fromYear,
+                                    untilYear).values()
         sumlinesList = sum(linesList)
         if dataRepresntIn == "p":
             linesList = [float(i)/sumlinesList for i in linesList]
@@ -62,27 +72,24 @@ class WAChat(object):
         width = 0.75
         fig, ax = plt.subplots()
         rects1 = ax.bar(ind+width/2.0, linesList, width, color='r')
-        ax.set_ylabel('Number of messages')
-        ax.set_title('Number of messages sent by each member')
-        if dataRepresntIn == "p":
-            ax.set_title(("Number of messages sent by each member"
-                          " divided by total number of messages"))
+        ax.set_ylabel(yAxisTitle)
+        ax.set_title(plotTitle)
         ax.set_xticks(ind+width)
         ax.set_xticklabels(peopleList, rotation="vertical")
         axes = plt.gca()
-        axes.set_ylim([0, 1.05 * max(linesList)])
+        axes.set_ylim([0, 1.1 * max(linesList)])
 
         def autolabel(rects):
             for rect in rects:
                 height = rect.get_height()
                 if dataRepresntIn == "p":
                     ax.text(rect.get_x()+rect.get_width()/2.,
-                        height + 0.01 * max(linesList), '%.1f%%'
-                        % (height * 100.0), ha='center', va='bottom')
+                            height + 0.01 * max(linesList), '%.1f%%'
+                            % (height * 100.0), ha='center', va='bottom')
                 else:
                     ax.text(rect.get_x()+rect.get_width()/2.,
-                        height + 0.01 * max(linesList), '%d'%int(height),
-                        ha='center', va='bottom')
+                            height + 0.01 * max(linesList), '%d' % int(height),
+                            ha='center', va='bottom')
 
         autolabel(rects1)
         plt.subplots_adjust(bottom=0.25)
