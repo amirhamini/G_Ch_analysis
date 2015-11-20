@@ -44,6 +44,18 @@ class WAChat(object):
                             .encode("ascii", "ignore"))
                     self.messageList.append(Message(date, user, text))
 
+    def getMessagesSeperatedByUsers(self, fromHour=0, untilHour=23, fromDay=1,
+                                    untilDay=31, fromMonth=1, untilMonth=12,
+                                    fromYear=2009, untilYear=2020):
+        messageSeparated = defaultdict(str)
+        for message in self.messageList:
+            if (isMessageInFrame(message, fromHour, untilHour, fromDay,
+                                 untilDay, fromMonth, untilMonth, fromYear,
+                                 untilYear)):
+                messageSeparated[message.user] += ' ' + message.text
+        return dict(messageSeparated)
+
+
     def getMembers(self, fromHour=0, untilHour=23, fromDay=1, untilDay=31,
                    fromMonth=1, untilMonth=12, fromYear=2009, untilYear=2020):
         members = defaultdict(int)
