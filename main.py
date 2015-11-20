@@ -15,8 +15,18 @@ def main():
     # for name in names:
     #     myChat.plotGivenYearOverMonthFrequencies(name)
     print myChat.getMembers()
-    print myChat.getMemberGivenYearOverMonthFrequencies('Varahram')
-
+    # print myChat.getMemberGivenYearOverMonthFrequencies('Varahram')
+    # txtSeparated = myChat.getMessagesSeperatedByUsers()
+    # import csv
+    # writer = csv.writer(open('txtSeparated.csv', 'wb'))
+    # writer.writerow(['name', 'text'])
+    # for key, value in txtSeparated.items():
+    #     writer.writerow([key, value])
+        # print key
+    # import json
+    # with open('txtSeparated.json', 'w') as fp:
+    #     for
+    #     json.dump(txtSeparated, fp)
 
 
 if __name__ == "__main__":
