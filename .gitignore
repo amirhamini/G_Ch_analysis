@@ -2,3 +2,5 @@
 *.py[cod]
 *.csv
 *.json
+Private/
+
