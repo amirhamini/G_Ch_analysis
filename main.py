@@ -3,7 +3,7 @@ import os
 
 
 def main():
-    fileName = "whatsapp.txt" if len(os.sys.argv) < 2 else os.sys.argv[1]
+    fileName = "whatsapp3.txt" if len(os.sys.argv) < 2 else os.sys.argv[1]
     myChat = WAChat(fileName)
     # myChat.plotMembersSpokenLines(plotTitle="July 2015", fromMonth=7,
                                   # fromYear=2015)
@@ -14,8 +14,11 @@ def main():
     #     myChat.plotOverHoursMemberSpokenLines(name)
     # for name in names:
     #     myChat.plotGivenYearOverMonthFrequencies(name)
-    print myChat.getMembers()
-    # print myChat.getMemberGivenYearOverMonthFrequencies('Varahram')
+    # print myChat.getMembers()
+    # print myChat.getMembers_givenYearAndMonth_dailyInfo(2015, 6)
+    # print myChat.getMembers_givenYear_monthlyInfo(2012)
+    print myChat.getMembers_givenYearAndMonthAndDay_hourlyInfo(2013, 7, 20)
+    # print myChat.getMemberAllYearsOverMonthFrequencies()
     # txtSeparated = myChat.getMessagesSeperatedByUsers()
     # import csv
     # writer = csv.writer(open('txtSeparated.csv', 'wb'))
