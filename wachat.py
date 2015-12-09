@@ -376,7 +376,7 @@ class WAChat(object):
         firstMessageDate = self.messageList[0].date
         lastMessageDate = self.messageList[-1].date
 
-        monthDays = [31, 28, 31, 30, 31, 30, 31, 30, 31, 30, 31]
+        monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
         # Not accounting for the leap years
         firstDay = 1
         finalDay = monthDays[month-1]
@@ -428,7 +428,7 @@ class WAChat(object):
         print "We do not deal with leap days so no result for Feb 29!!! sorry\n"
         print "Note: The results are based on the timezone of the downloader"
         #
-        monthDays = [31, 28, 31, 30, 31, 30, 31, 30, 31, 30, 31]
+        monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
         if day < 1 or day > monthDays[month-1]:
             print 'Your date is not a valid Date pffff'
             return
