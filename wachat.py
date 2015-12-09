@@ -283,7 +283,7 @@ class WAChat(object):
 
         plt.show()
 
-    def getMemberGivenYearOverMonthFrequencies(self, memberName=None):
+    def getMemberAllYearsOverMonthFrequencies(self, memberName=None):
         # For each existing year (startDate to endDate) for given
         # member finds the number of spoken lines for each month.
         # If MemberName is not specified it provides information for
@@ -327,12 +327,168 @@ class WAChat(object):
 
         return infoDic
 
+    def getMembers_givenYear_monthlyInfo(self, year, memberName=None):
+        # Give this function a specific year
+        # and it gives
+        # you how many line each member spoke in each month of that year
+        if memberName:
+            peopleList = [memberName]
+        else:
+            peopleList = self.getMembers().keys()
+        firstMessageDate = self.messageList[0].date
+        lastMessageDate = self.messageList[-1].date
+
+        # Not accounting for the leap years
+        firstMonth = 1
+        finalMonth = 12
+
+        if year > lastMessageDate.year or year < firstMessageDate.year:
+            print "Please enter a valid year which the group data provides!\n"
+            print "Something between %r and %r!" % (firstMessageDate.year,
+                                                    lastMessageDate.year)
+            return
+        elif year == lastMessageDate.year and lastMessageDate.month != 12:
+            print "Note: The year you are asking is right-incomplete"
+            finalMonth = lastMessageDate.month
+        elif year == firstMessageDate.year and firstMessageDate.month != 1:
+            print "Note: The month you are asking for is left-incomplete"
+            firstMonth = firstMessageDate.month
+        infoDic = dict()
+        for memberName in peopleList:
+            infoDic[memberName] = dict()
+            for month in range(firstMonth, finalMonth + 1):
+                infoDic[memberName][month] = self.getMembers(
+                    fromMonth=month,
+                    untilMonth=month,
+                    fromYear=year,
+                    untilYear=year).get(memberName, 0)
+        return infoDic
+
+    def getMembers_givenYearAndMonth_dailyInfo(self, year, month,
+                                               memberName=None):
+        # Give this function a specific month (1-12) of a specific year
+        # and it gives
+        # you how many line each member spoke in each day of that month
+        if memberName:
+            peopleList = [memberName]
+        else:
+            peopleList = self.getMembers().keys()
+        firstMessageDate = self.messageList[0].date
+        lastMessageDate = self.messageList[-1].date
+
+        monthDays = [31, 28, 31, 30, 31, 30, 31, 30, 31, 30, 31]
+        # Not accounting for the leap years
+        firstDay = 1
+        finalDay = monthDays[month-1]
+
+        if year > lastMessageDate.year or year < firstMessageDate.year:
+            print "Please enter a valid year which the group data provides!\n"
+            print "Something between %r and %r!" % (firstMessageDate.year,
+                                                    lastMessageDate.year)
+            return
+        elif year == lastMessageDate.year and month > lastMessageDate.month:
+            print "Please enter a valid month which the group data provides!"
+            print "Something <= than %r!" % lastMessageDate.month
+            return
+        elif year == firstMessageDate.year and month < firstMessageDate.month:
+            print "Please enter a valid month which the group data provides!"
+            print "Something >= than %r!" % firstMessageDate.month
+            return
+        elif year == lastMessageDate.year and month == lastMessageDate.month:
+            print "Note: The month you are asking might be right-incomplete"
+            finalDay = lastMessageDate.day
+        elif year == firstMessageDate.year and month == firstMessageDate.month:
+            print "Note: The month you are asking might be left-incomplete"
+            firstDay = firstMessageDate.day
+        infoDic = dict()
+        for memberName in peopleList:
+            infoDic[memberName] = dict()
+            for day in range(firstDay, finalDay + 1):
+                infoDic[memberName][day] = self.getMembers(
+                    fromMonth=month,
+                    untilMonth=month,
+                    fromYear=year,
+                    untilYear=year,
+                    fromDay=day,
+                    untilDay=day).get(memberName, 0)
+        return infoDic
+
+    def getMembers_givenYearAndMonthAndDay_hourlyInfo(self, year, month, day,
+                                                      memberName=None):
+        # Give this function a specific day of a specific month (1-12) of a
+        #specific year
+        # and it gives
+        # you how many line each member spoke in each hour of that day
+        if memberName:
+            peopleList = [memberName]
+        else:
+            peopleList = self.getMembers().keys()
+        firstMessageDate = self.messageList[0].date
+        lastMessageDate = self.messageList[-1].date
+        print "We do not deal with leap days so no result for Feb 29!!! sorry\n"
+        print "Note: The results are based on the timezone of the downloader"
+        #
+        monthDays = [31, 28, 31, 30, 31, 30, 31, 30, 31, 30, 31]
+        if day < 1 or day > monthDays[month-1]:
+            print 'Your date is not a valid Date pffff'
+            return
+
+        # Not accounting for the leap years
+        firstHour = 0
+        finalHour = 24
+
+        if year > lastMessageDate.year or year < firstMessageDate.year:
+            print "Please enter a valid year which the group data provides!\n"
+            print "Something between %r and %r!" % (firstMessageDate.year,
+                                                    lastMessageDate.year)
+            return
+        elif year == lastMessageDate.year and month > lastMessageDate.month:
+            print "Please enter a valid month which the group data provides!"
+            print "Something <= than %r!" % lastMessageDate.month
+            return
+        elif year == firstMessageDate.year and month < firstMessageDate.month:
+            print "Please enter a valid month which the group data provides!"
+            print "Something >= than %r!" % firstMessageDate.month
+            return
+        elif year == lastMessageDate.year and month == lastMessageDate.month:
+            if day > lastMessageDate.day:
+                print "Please enter a valid day which the group data provides!"
+                print "The last day recorded for this year-month is %r" % lastMessageDate.day
+                return
+            if day == lastMessageDate.day:
+                print "Note: The day you are asking might be right-incomplete"
+                finalHour = lastMessageDate.hour
+        #
+        elif year == firstMessageDate.year and month == firstMessageDate.month:
+            if day < firstMessageDate.day:
+                print "Please enter a valid day which the group data provides!"
+                print "The first day recorded for this year-month is %r" % firstMessageDate.day
+                return
+            if day == firstMessageDate.day:
+                print "Note: The day you are asking might be left-incomplete"
+                firstHour = firstMessageDate.hour
+
+        infoDic = dict()
+        for memberName in peopleList:
+            infoDic[memberName] = dict()
+            for hour in range(firstHour, finalHour):
+                infoDic[memberName][hour] = self.getMembers(
+                    fromMonth=month,
+                    untilMonth=month,
+                    fromYear=year,
+                    untilYear=year,
+                    fromDay=day,
+                    untilDay=day,
+                    fromHour=hour,
+                    untilHour=hour).get(memberName, 0)
+        return infoDic
+
     def plotGivenYearOverMonthFrequencies(self, memberName=None):
 
         monthNames = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5,
                       'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10,
                       'Nov': 11, 'Dec': 12}
-        toPlotData = self.getMemberGivenYearOverMonthFrequencies(
+        toPlotData = self.getMemberAllYearsOverMonthFrequencies(
             memberName)[memberName]
         fig, ax = plt.subplots()
         numColors = 0
