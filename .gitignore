@@ -3,4 +3,4 @@
 *.csv
 *.json
 Private/
-
+.DS_store
